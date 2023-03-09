@@ -1,6 +1,7 @@
 package com.my.spring.web.ch02.ex06;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,8 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("ch02/ex06")
 public class UserController {
 	@GetMapping("login")
-	public String loginIn(@ModelAttribute("user") UserDto user) {
+	public String loginIn(@CookieValue(required=false) String userName, @ModelAttribute("user") UserDto user) {
+		user.setUserName(userName);
 		return "ch02/ex06/login";
 	}
 	
@@ -30,5 +32,11 @@ public class UserController {
 		}
 		
 		return "ch02/ex06/logout";
+	}
+	
+	@GetMapping("logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:login";
 	}
 }
